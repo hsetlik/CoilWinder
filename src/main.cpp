@@ -1,12 +1,13 @@
 #include <Arduino.h>
 
-#include <Adafruit_SSD1306.h>
+#include "WinderState.h"
 
+Winder w;
 void setup(){
-
+  w.init();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  w.run();
 }
 
