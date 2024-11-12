@@ -19,6 +19,7 @@ void Winder::encoderTurned(bool dir)
 
             state.totalTurns = std::max<uint32_t>(state.totalTurns - turnDiff, minTurns);
         }
+        displayUpdateNeeded = true;
     }
 
 
@@ -30,7 +31,7 @@ void Winder::startButtonPressed()
     if(!state.isRunning){
         motor.stop();
         motor.runToPosition();
-    } else {
+    } else if (currentCoilTurns < (float)state.totalTurns) {
         speedPotChanged(speedPotVal);
     }
 }
@@ -59,7 +60,7 @@ void Winder::init()
     }
 
     // init the motor
-    motor.setMaxSpeed(1000.0f);
+    motor.setMaxSpeed(2000.0f);
     motor.setAcceleration(100.0f);
 }
 
@@ -68,6 +69,10 @@ void Winder::run()
     if(state.isRunning){
         motor.runSpeed();
         incrementTurns(motor.currentPosition());
+    }
+    if(displayUpdateNeeded){
+        updateDisplay();
+        displayUpdateNeeded = false;
     }
 }
 
@@ -82,4 +87,20 @@ void Winder::incrementTurns(int32_t pos){
         motor.runToPosition();
         state.isRunning = false;
     }
+    if(currentCoilTurns - lastDrawnCoilTurns > 1.0f){
+        displayUpdateNeeded = true;
+        lastDrawnCoilTurns = currentCoilTurns;
+    }
+}
+
+void Winder::updateDisplay(){
+    disp.clearDisplay();
+    disp.setTextSize(1);
+    disp.setTextColor(SSD1306_WHITE);
+    disp.setCursor(4, 0);
+    disp.print("TURNS:");
+    std::string numStr = std::to_string((uint16_t)currentCoilTurns) + "/" + std::to_string(state.totalTurns);
+    disp.setCursor(4, 8);
+    disp.print(numStr.c_str());
+    disp.display();
 }

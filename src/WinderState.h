@@ -30,6 +30,7 @@ struct WinderState{
 class Winder{
 private:
     WinderState state;
+    float lastDrawnCoilTurns = 0.0f;
     float currentCoilTurns = 0.0f;
 // outputs
     AccelStepper motor;
@@ -37,6 +38,9 @@ private:
 // helper for counting the turns
     uint16_t speedPotVal = 0;
     void incrementTurns(int32_t pos);
+// display stuff
+    bool displayUpdateNeeded = false;
+    void updateDisplay();
 public:
     Winder();
     // call in setup
