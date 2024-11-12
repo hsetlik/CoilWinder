@@ -10,6 +10,9 @@ Encoder enc(ENC_L, ENC_R);
 OneButton encButton;
 OneButton startButton;
 
+uint16_t speedPotVal = 0;
+uint16_t potReading;
+
 // main business stuff
 Winder w;
 
@@ -35,6 +38,7 @@ void setup()
 
 void loop()
 {
+  // check the buttons
   encButton.tick();
   startButton.tick();
   // check the encoder
@@ -43,6 +47,12 @@ void loop()
     w.encoderTurned(newPos > encPos);
     encPos = newPos;
   }
-
+  // check the speed knob
+  potReading = analogRead(SPEED_POT_PIN);
+  if(potReading != speedPotVal){
+    w.speedPotChanged(potReading);
+    speedPotVal = potReading;
+  }
+  // update the motor and display
   w.run();
 }
