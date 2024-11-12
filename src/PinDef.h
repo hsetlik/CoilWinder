@@ -15,4 +15,7 @@
 #define ENC_BTN 17
 #define START_BTN 16
 
+// ADC pin for the speed control
+#define SPEED_POT_PIN 32
+
 #endif

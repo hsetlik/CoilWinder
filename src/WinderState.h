@@ -4,8 +4,7 @@
 #include <Arduino.h>
 #include "PinDef.h"
 #include <Adafruit_SSD1306.h>
-#include <Encoder.h>
-#include <OneButton.h>
+
 #include <AccelStepper.h>
 #define DISP_W 128
 #define DISP_H 64
@@ -19,7 +18,7 @@ struct WinderState{
     // running toggle
     bool isRunning = false;
     // speed in RPM of the final output shaft
-    float coilRPM = 35.0f; 
+    float coilRPM = 35.0f;
 };
 
 // some limits for things
@@ -33,17 +32,18 @@ private:
 // outputs
     AccelStepper motor;
     Adafruit_SSD1306 disp;
-// controls
-    long encPos = 0;
-    Encoder enc;
-    OneButton encButton;
-    OneButton startButton;
+
 public:
     Winder();
     // call in setup
     void init();
     // call in loop
     void run();
+    // wire these to the button/encoder callbacks in main.cpp
+    void encoderTurned(bool dir);
+    void startButtonPressed();
+    void encButtonPressed();
+
 };
 
 
