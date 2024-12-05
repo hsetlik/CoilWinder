@@ -24,7 +24,7 @@ struct WinderState{
 
 // some limits for things
 #define COIL_SPEED_MIN 20.0f
-#define COIL_SPEED_MAX 1500.0f
+#define COIL_SPEED_MAX 1200.0f
 
 //===========================
 class Winder{

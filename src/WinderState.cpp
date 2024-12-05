@@ -39,6 +39,7 @@ void Winder::encButtonPressed()
 {
     if(!state.isRunning){ // reset the turn counter
         currentCoilTurns = 0.0f;
+        displayUpdateNeeded = true;
     }
 }
 void Winder::speedPotChanged(uint16_t val){
@@ -52,6 +53,10 @@ void Winder::speedPotChanged(uint16_t val){
 void Winder::init()
 {
     Serial.begin(115200);
+    // init I2C
+    if(!Wire.begin(SDA_PIN, SCL_PIN)){
+        Serial.println("Could not start I2C!");
+    }
 
     // init the display
     if (!disp.begin(SSD1306_SWITCHCAPVCC, DISP_ADDRESS))
@@ -81,6 +86,7 @@ void Winder::incrementTurns(int32_t pos){
     static int32_t prevPos = 0;
     // turns = dSteps / steps per rev
     float diff = (float)(pos - prevPos)/(float)(STEPS_PER_MOTOR_REV / 4);
+    prevPos = pos;
     currentCoilTurns += diff;
     if((uint32_t)currentCoilTurns >= state.totalTurns){ // we've reached the end of the coil
         motor.stop();
